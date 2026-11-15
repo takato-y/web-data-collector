@@ -1,9 +1,9 @@
-"""収集結果を受け渡すためのデータ型。"""
+"""分析部で使うデータ型。値は履歴DB（sql/schema.sql）の列に対応する。"""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-# 在庫状況の区分（表示名は STOCK_LABELS）
+# 在庫状況の区分（収集部が price_snapshots.stock に書く値）
 IN_STOCK = "in_stock"
 LOW_STOCK = "low_stock"
 OUT_OF_STOCK = "out_of_stock"
@@ -20,28 +20,9 @@ AVAILABLE = (IN_STOCK, LOW_STOCK)
 
 
 @dataclass
-class ProductItem:
-    """1 商品ぶんの収集結果。取れなかった値は None。"""
+class SnapshotItem:
+    """1 回の収集での 1 商品の価格・在庫。取れなかった値は None。"""
 
     product_id: str
-    name: str | None = None
     price: int | None = None
     stock: str | None = None
-    category: str | None = None
-    url: str | None = None
-
-
-@dataclass
-class CollectResult:
-    """1 対象ぶんの収集結果。
-
-    status: success=全ページ取得 / partial=一部失敗 / failed=1 件も取れない /
-            skipped=robots.txt などの理由で今回は収集しない
-    """
-
-    target: str
-    items: list[ProductItem] = field(default_factory=list)
-    pages_fetched: int = 0
-    error_count: int = 0
-    status: str = "success"
-    message: str = ""

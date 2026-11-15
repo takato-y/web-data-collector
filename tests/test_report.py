@@ -7,18 +7,12 @@ from openpyxl import load_workbook
 
 from webcollector.report import EVENT_FILLS, build_report
 from webcollector.storage import Storage
-from tests.test_storage import run_once
-from tests.conftest import make_config
 
 
 @pytest.fixture
-def report_path(site, tmp_path):
-    cfg = make_config(site.base, tmp_path)
-    st = Storage(tmp_path / "h.db")
-    run_once(cfg, st, cfg.targets[0])
-    site.use("day2.json")
-    run_once(cfg, st, cfg.targets[0])
-    return build_report(st, tmp_path / "out", now=datetime(2026, 11, 15, 9, 0, 0))
+def report_path(demo_db, tmp_path):
+    demo_db.analyze_pending()
+    return build_report(demo_db, tmp_path / "out", now=datetime(2026, 11, 15, 9, 0, 0))
 
 
 def test_sheets_and_counts(report_path):

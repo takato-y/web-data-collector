@@ -5,11 +5,11 @@ from datetime import datetime
 import pytest
 
 from webcollector.config import NotifyConfig
-from webcollector.models import CollectResult, ProductItem
 from webcollector.notify import (WebhookUrlError, build_payload, mask_url, notify_pending,
                                  validate_webhook_url)
 from webcollector.storage import Storage
 from tools import mock_webhook
+from tests.db_seed import seed_run
 
 NOW = datetime(2026, 11, 15, 9, 0)
 
@@ -17,13 +17,12 @@ NOW = datetime(2026, 11, 15, 9, 0)
 @pytest.fixture
 def storage(tmp_path):
     st = Storage(tmp_path / "h.db")
-    r1 = st.start_run("demo_shop")
-    st.record_result(r1, CollectResult(target="demo_shop", items=[
-        ProductItem("A-1", "方眼ノート", 480), ProductItem("A-2", "ボールペン", 980)]))
-    r2 = st.start_run("demo_shop")
-    st.record_result(r2, CollectResult(target="demo_shop", items=[
-        ProductItem("A-1", "方眼ノート", 398), ProductItem("A-2", "ボールペン", 980),
-        ProductItem("A-3", "<!channel> @everyone 付箋", 300)]))
+    seed_run(st.conn, "demo_shop", [{"product_id": "A-1", "name": "方眼ノート", "price": 480},
+                                    {"product_id": "A-2", "name": "ボールペン", "price": 980}])
+    seed_run(st.conn, "demo_shop", [{"product_id": "A-1", "name": "方眼ノート", "price": 398},
+                                    {"product_id": "A-2", "name": "ボールペン", "price": 980},
+                                    {"product_id": "A-3", "name": "<!channel> @everyone 付箋", "price": 300}])
+    st.analyze_pending()
     return st
 
 

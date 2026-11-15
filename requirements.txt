@@ -1,5 +1,6 @@
+# 分析部（差分検出・Excel レポート・Webhook 通知）
 requests>=2.32,<3
-beautifulsoup4>=4.12,<5
 openpyxl>=3.1,<4
 PyYAML>=6.0,<7
+# 架空のデモショップ（動作確認用）
 Flask>=3.0,<4

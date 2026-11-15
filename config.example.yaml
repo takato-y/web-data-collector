@@ -1,6 +1,8 @@
 # 収集ツールの設定例（デモショップ用）
 # 使うときは config.yaml という名前で写して編集する（config.yaml は Git の管理外）。
 # パスはこのファイルのあるフォルダからの相対で解決する。
+# 収集部（TypeScript）は user_agent・request・storage・targets を、
+# 分析部（Python）は storage・report・log・notify を読む。
 
 # 名乗り（User-Agent）。ツール名と、対象サイトの管理者が問い合わせできるページの URL を入れる
 user_agent: "WebDataCollector/1.0 (+https://example.com/bot-info)"
@@ -42,7 +44,7 @@ targets:
       category: { selector: .category }
 
   - name: demo_shop_new
-    type: js                 # JavaScript で描画されるページ（Playwright が必要。無ければ見送り）
+    type: js                 # JavaScript で描画されるページ（collector に Playwright とブラウザが必要。無ければ見送り）
     start_url: http://127.0.0.1:8000/new-arrivals
     wait_for: li.product-card
     item_selector: li.product-card

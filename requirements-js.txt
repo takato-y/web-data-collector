@@ -1,3 +1,0 @@
-# JavaScript で描画されるページを収集する場合だけ必要（任意）
-# 導入後に `playwright install chromium-headless-shell` でブラウザを取得する
-playwright>=1.45,<2
