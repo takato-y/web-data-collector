@@ -89,11 +89,16 @@ echo "要求の件数: $(grep -c ' GET ' "$WORK/demo_site_access.log")"
 # 収集部が自分で送った要求（ブラウザが読み込む付随ファイル /static・/api を除く）の最短間隔
 import sys
 from datetime import datetime
-times = []
+# 1 回の実行（robots.txt の取得から次の robots.txt の前まで）の中で測る。
+# 実行と実行の間（別のプロセス）は間隔の制御の対象外（定期実行は数時間おきを想定）
+runs = []
 for line in open(sys.argv[1], encoding="utf-8"):
     if "UA=WebDataCollector" in line and " GET /static" not in line and " GET /api" not in line:
-        times.append(datetime.strptime(line[:23], "%Y-%m-%d %H:%M:%S,%f"))
-gaps = [(b - a).total_seconds() for a, b in zip(times, times[1:])]
-print(f"収集部の要求: {len(times)} 件 / 最短の間隔: {min(gaps):.3f} 秒 / 平均: {sum(gaps) / len(gaps):.3f} 秒")
+        if " GET /robots.txt " in line:
+            runs.append([])
+        runs[-1].append(datetime.strptime(line[:23], "%Y-%m-%d %H:%M:%S,%f"))
+for i, times in enumerate(runs, 1):
+    gaps = [(b - a).total_seconds() for a, b in zip(times, times[1:])]
+    print(f"{i} 回目の収集部の要求: {len(times)} 件 / 最短の間隔: {min(gaps):.3f} 秒 / 平均: {sum(gaps) / len(gaps):.3f} 秒")
 PYEOF
 echo "作業フォルダ: $WORK"
