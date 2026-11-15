@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from webcollector.models import AVAILABLE, OUT_OF_STOCK, STOCK_LABELS, UNKNOWN, ProductItem
+from webcollector.models import AVAILABLE, OUT_OF_STOCK, STOCK_LABELS, UNKNOWN, SnapshotItem
 
 EVENT_LABELS = {
     "price_down": "値下げ",
@@ -46,7 +46,7 @@ def _yen(value: int | None) -> str | None:
     return None if value is None else f"{value:,}円"
 
 
-def detect_changes(prev: PreviousState, items: list[ProductItem], run_status: str) -> list[ChangeEvent]:
+def detect_changes(prev: PreviousState, items: list[SnapshotItem], run_status: str) -> list[ChangeEvent]:
     if not prev.has_previous_run:
         return []
     events: list[ChangeEvent] = []

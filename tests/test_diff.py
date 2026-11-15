@@ -1,6 +1,6 @@
 """FN-008 差分検出のテスト（判定の決まりそのもの）。"""
 from webcollector.diff import PreviousState, detect_changes
-from webcollector.models import IN_STOCK, LOW_STOCK, OUT_OF_STOCK, UNKNOWN, ProductItem as P
+from webcollector.models import IN_STOCK, LOW_STOCK, OUT_OF_STOCK, UNKNOWN, SnapshotItem as P
 
 
 def prev(**kw):
