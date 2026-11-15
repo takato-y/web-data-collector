@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 DESIGN = DOCS / "03_詳細設計.md"
 RUNBOOK = DOCS / "07_障害対応手順書.md"
-ERR = re.compile(r"ERR-\d{3}")
+ERR = re.compile(r"(?<![A-Za-z0-9_-])ERR-\d+(?![A-Za-z0-9_-])")
 
 
 def _chapters(text: str) -> dict[str, str]:
@@ -31,8 +31,8 @@ def test_tc_doc_01_runbook_covers_all_error_ids():
 
     runbook = RUNBOOK.read_text(encoding="utf-8")
     chapters = _chapters(runbook)
-    headings = set(re.findall(r"^### 4\.\d+ (ERR-\d{3}) ", chapters["4"], flags=re.M))
-    table_ids = set(re.findall(r"^\| (ERR-\d{3}) \|", chapters["7"], flags=re.M))
+    headings = set(re.findall(r"^### 4\.\d+ (ERR-\d+) ", chapters["4"], flags=re.M))
+    table_ids = set(re.findall(r"^\| (ERR-\d+) \|", chapters["7"], flags=re.M))
 
     assert design_ids - headings == set(), f"4 章に見出しが無いエラーID: {sorted(design_ids - headings)}"
     assert design_ids - table_ids == set(), f"7 章の表に無いエラーID: {sorted(design_ids - table_ids)}"
