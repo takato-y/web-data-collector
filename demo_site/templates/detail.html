@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }} | デモ文具ストア{% endblock %}
+{% block main %}
+<article class="product-detail" data-product-id="{{ p.id }}">
+  <h1 class="name">{{ p.name }}</h1>
+  <p>商品番号: <span class="sku">{{ p.id }}</span></p>
+  <p>カテゴリ: <span class="category">{{ p.category }}</span></p>
+  <p>価格: <span class="price">{{ "{:,}".format(p.price) }}円（税込）</span></p>
+  <p>在庫: <span class="stock">{{ p.stock }}</span></p>
+  <p class="description">{{ p.description }}</p>
+  <a href="/cart?add={{ p.id }}">カートに入れる</a>
+</article>
+{% endblock %}

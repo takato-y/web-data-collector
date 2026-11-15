@@ -1,0 +1,129 @@
+{
+  "_note": "架空のデモデータ（2日目）。1日目から価格・在庫・掲載商品を変えてある。商品名が = や + で始まるものは、Excel の数式の無害化を確かめるための試験用データ。",
+  "products": [
+    {
+      "id": "A-1001",
+      "name": "方眼ノート B5 5冊パック",
+      "category": "ノート",
+      "price": 398,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1002",
+      "name": "リングノート A5 ドット罫",
+      "category": "ノート",
+      "price": 350,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1003",
+      "name": "ゲルインクボールペン 0.5mm 黒 10本",
+      "category": "筆記具",
+      "price": 980,
+      "stock": "在庫切れ",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1004",
+      "name": "シャープペンシル 0.3mm",
+      "category": "筆記具",
+      "price": 550,
+      "stock": "残りわずか",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1005",
+      "name": "デスクオーガナイザー 3段",
+      "category": "収納",
+      "price": 1320,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1006",
+      "name": "クリアファイル A4 20枚",
+      "category": "ファイル",
+      "price": 280,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1007",
+      "name": "ふせん 75mm 角 5色",
+      "category": "ふせん",
+      "price": 420,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1008",
+      "name": "ホッチキス 中型",
+      "category": "事務用品",
+      "price": 890,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1009",
+      "name": "マスキングテープ 15mm 3巻",
+      "category": "テープ",
+      "price": 360,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1010",
+      "name": "レターケース A4 5段",
+      "category": "収納",
+      "price": 2180,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1011",
+      "name": "蛍光ペン 6色セット",
+      "category": "筆記具",
+      "price": 660,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1013",
+      "name": "+3色ボールペン 限定カラー",
+      "category": "筆記具",
+      "price": 770,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    },
+    {
+      "id": "A-1014",
+      "name": "=HYPERLINK(\"https://example.com\",\"詳細\") 付箋セット",
+      "category": "ふせん",
+      "price": 500,
+      "stock": "在庫あり",
+      "description": "架空の商品です。"
+    }
+  ],
+  "new_arrivals": [
+    {
+      "id": "N-2001",
+      "name": "万年筆 細字 ネイビー",
+      "price": 3300,
+      "stock": "在庫あり"
+    },
+    {
+      "id": "N-2002",
+      "name": "手帳 2027年版 A6",
+      "price": 1480,
+      "stock": "在庫あり"
+    },
+    {
+      "id": "N-2003",
+      "name": "@ペンケース スリム",
+      "price": 1100,
+      "stock": "残りわずか"
+    }
+  ]
+}

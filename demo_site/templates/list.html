@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}商品一覧 {{ page }}/{{ pages }} | デモ文具ストア{% endblock %}
+{% block main %}
+<h1>商品一覧</h1>
+<ul class="product-list">
+  {% for p in items %}
+  <li class="product-card" data-product-id="{{ p.id }}">
+    <a class="product-link" href="/products/{{ p.id }}"><span class="name">{{ p.name }}</span></a>
+    <span class="price">¥{{ "{:,}".format(p.price) }}</span>
+  </li>
+  {% endfor %}
+</ul>
+<nav class="pager">
+  {% if page > 1 %}<a class="prev" rel="prev" href="/products?page={{ page - 1 }}">前へ</a>{% endif %}
+  <span>{{ page }} / {{ pages }}</span>
+  {% if page < pages %}<a class="next" rel="next" href="/products?page={{ page + 1 }}">次へ</a>{% endif %}
+</nav>
+{% endblock %}
