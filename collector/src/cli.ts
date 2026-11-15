@@ -43,9 +43,10 @@ export async function main(argv: string[]): Promise<number> {
   let exit = 0;
   try {
     for (const t of targets) {
+      const previousItems = storage.lastItemCount(t.name);
       const runId = storage.startRun(t.name);
       log.info(`収集を開始します: ${t.name} (${t.startUrl})`);
-      const result = await collector.collect(t);
+      const result = await collector.collect(t, previousItems);
       storage.saveResult(runId, result);
       const label = STATUS_LABELS[result.status];
       process.stdout.write(

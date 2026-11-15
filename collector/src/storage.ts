@@ -40,6 +40,14 @@ export class Storage {
     return Number(info.lastInsertRowid);
   }
 
+  /** 同じ対象の直前の成功・一部失敗の回の商品件数。該当する回が無ければ 0（失敗・見送り・実行中の回は見ない）。 */
+  lastItemCount(target: string): number {
+    const row = this.db.prepare(
+      "SELECT items_collected FROM collection_runs WHERE target_name = ? AND status IN ('success', 'partial') " +
+        "ORDER BY run_id DESC LIMIT 1").get(target) as { items_collected: number } | undefined;
+    return row?.items_collected ?? 0;
+  }
+
   /** 収集結果を 1 つのトランザクションで保存する。途中で失敗したら、この実行の書き込みはすべて取り消す。 */
   saveResult(runId: number, result: CollectResult, at: string = nowIso()): void {
     const upsert = this.db.prepare(`
