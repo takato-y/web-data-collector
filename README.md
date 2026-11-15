@@ -1,5 +1,10 @@
 # Webデータ収集・定期レポートツール
 
+[![test](https://github.com/takato-y/web-data-collector/actions/workflows/test.yml/badge.svg)](https://github.com/takato-y/web-data-collector/actions/workflows/test.yml)
+
+- GitHub Actions で検査している範囲：分析部の自動テスト（pytest）と収集部の自動テスト（node --test）。ブラウザを使うテストはブラウザが無いと飛ばす
+- 手元の環境でのみ確かめた範囲：架空のデモショップを使う通し試験（scripts/e2e.sh）、ブラウザを使うテスト、手動の確認（再試行の回復・run.ps1）
+
 Web ショップに掲載されている商品の価格と在庫を決まった時刻に自動で集め、前回からの変化（値下げ・在庫切れ・新商品など）を Excel のレポートとチャットへの通知でお知らせするツールです。
 
 本リポジトリはポートフォリオ（閲覧用）です。無断での再利用・再配布はご遠慮ください。
