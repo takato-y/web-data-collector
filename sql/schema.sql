@@ -1,4 +1,5 @@
--- 履歴DB（SQLite）の定義。webcollector/storage.py が起動時に実行する。
+-- 履歴DB（SQLite）の定義。収集部（collector/src/storage.ts）と分析部（webcollector/storage.py）の受け渡し口。
+-- 両方の部が起動時に実行する（CREATE ... IF NOT EXISTS のため何度実行してもよい）。
 -- 論理名・項目の説明は docs/04_テーブル定義書.md を参照。
 
 PRAGMA foreign_keys = ON;
@@ -14,7 +15,8 @@ CREATE TABLE IF NOT EXISTS collection_runs (
     pages_fetched   INTEGER NOT NULL DEFAULT 0,
     items_collected INTEGER NOT NULL DEFAULT 0,
     error_count     INTEGER NOT NULL DEFAULT 0,
-    message         TEXT
+    message         TEXT,
+    analyzed_at     TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_runs_target ON collection_runs (target_name, status, run_id);
 
