@@ -1,0 +1,7 @@
+# cron の設定例（crontab -e で追加する）
+# 毎日 8:00 と 17:00 に「収集 → 分析・帳票・通知」を実行する。
+# /path/to は導入先に合わせて書き換える。
+# WEBHOOK_URL は crontab に直接書かず、権限を絞った別ファイル（chmod 600）から読み込む。
+#
+# 分 時 日 月 曜日 コマンド
+0 8,17 * * * . /path/to/secure/web-data-collector.env && /path/to/web-data-collector/scripts/run.sh /path/to/web-data-collector/config.yaml >/dev/null 2>&1
