@@ -82,6 +82,37 @@ test("詳細の取得に失敗したら一部失敗、値は空のまま（TC-00
   } finally { await s.close(); }
 });
 
+test("前回は商品があったのに今回 0 件なら失敗とし、掲載終了を判定させない（TC-005-09）", async () => {
+  const s = await startServer(shopHandler());
+  try {
+    const { cfg, c } = build(s.base);
+    const t = { ...cfg.targets[0], itemSelector: "li.no-such-card", detailFields: {} };
+    const r = await c.collect(t, 3);
+    assert.equal(r.status, "failed");
+    assert.equal(r.errorCount, 1);
+    assert.equal(r.pagesFetched, 2); // 一覧は取得できている（ページ送りのリンクはセレクタと別のため 2 ページ）
+    assert.match(r.message, /商品が 0 件（前回 3 件）/);
+    // JavaScript ページでも同じ
+    const { cfg: cfg2, c: c2 } = build(s.base, async () => "<ul></ul>");
+    const rj = await c2.collect(cfg2.targets[1], 2);
+    assert.equal(rj.status, "failed");
+    assert.match(rj.message, /前回 2 件/);
+  } finally { await s.close(); }
+});
+
+test("初回・前回も 0 件の対象は 0 件でも成功のまま（TC-005-10）", async () => {
+  const s = await startServer(shopHandler());
+  try {
+    const { cfg, c } = build(s.base);
+    const t = { ...cfg.targets[0], itemSelector: "li.no-such-card", detailFields: {} };
+    for (const prev of [undefined, 0]) {
+      const r = await c.collect(t, prev);
+      assert.equal(r.status, "success");
+      assert.equal(r.errorCount, 0);
+    }
+  } finally { await s.close(); }
+});
+
 test("JavaScript ページを描画関数経由で解析（TC-006-01）", async () => {
   const s = await startServer(shopHandler());
   try {

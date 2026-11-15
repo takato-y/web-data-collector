@@ -77,8 +77,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"設定エラー: {e}", file=sys.stderr)
         return 2
     setup_logging(cfg.log_dir, args.verbose)
-    st = Storage(cfg.db_path)
+    st: Storage | None = None
     try:
+        st = Storage(cfg.db_path)  # 開けない場合（権限・空き不足・壊れたファイル）も下の except で記録する
         if args.command == "analyze":
             return cmd_analyze(st)
         if args.command == "report":
@@ -91,4 +92,5 @@ def main(argv: list[str] | None = None) -> int:
         log.exception("想定外の誤りで止まりました")
         return 1
     finally:
-        st.close()
+        if st is not None:
+            st.close()

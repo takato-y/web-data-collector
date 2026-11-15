@@ -33,10 +33,12 @@ test("このツール名を名指しした禁止に従う（TC-002-02）", async
   assert.equal(await p.allowed("http://shop.example.com/products"), false);
 });
 
-test("robots.txt が無い（404）なら制限なし（TC-002-03）", async () => {
-  const p = new RobotsPolicy(async () => ({ status: 404, body: "" }), UA);
-  assert.equal(await p.allowed("http://shop.example.com/x"), true);
-  assert.equal(await p.isUnavailable("http://shop.example.com/"), false);
+test("robots.txt が無い（404・410）なら制限なし（TC-002-03）", async () => {
+  for (const status of [404, 410]) {
+    const p = new RobotsPolicy(async () => ({ status, body: "" }), UA);
+    assert.equal(await p.allowed("http://shop.example.com/x"), true);
+    assert.equal(await p.isUnavailable("http://shop.example.com/"), false);
+  }
 });
 
 test("robots.txt が 5xx・通信エラーなら全て取得しない（TC-002-04）", async () => {
@@ -44,5 +46,13 @@ test("robots.txt が 5xx・通信エラーなら全て取得しない（TC-002-0
     const p = new RobotsPolicy(async () => ({ status, body: "" }), UA);
     assert.equal(await p.isUnavailable("http://shop.example.com/"), true);
     assert.equal(await p.allowed("http://shop.example.com/products"), false);
+  }
+});
+
+test("robots.txt が 404・410 以外の 4xx（401・403・429 など）なら全て取得しない（TC-002-07）", async () => {
+  for (const status of [400, 401, 403, 429]) {
+    const p = new RobotsPolicy(async () => ({ status, body: "" }), UA);
+    assert.equal(await p.isUnavailable("http://shop.example.com/"), true, `status=${status}`);
+    assert.equal(await p.allowed("http://shop.example.com/products"), false, `status=${status}`);
   }
 });

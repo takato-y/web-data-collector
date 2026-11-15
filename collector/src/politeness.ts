@@ -78,13 +78,15 @@ export class RobotsPolicy {
 
   private async load(robotsUrl: string): Promise<RobotsRule> {
     const { status, body } = await this.fetchRobots(robotsUrl);
-    if (status === null || status >= 500) {
-      log.warn(`robots.txt を取得できないため、このサイトの収集を見送ります: ${robotsUrl} (status=${status})`);
-      return { state: "unavailable" };
-    }
-    if (status >= 400) {
+    // 「無い」と言い切れる 404・410 だけを制限なしとする。401・403・429（再試行後）などの 4xx は
+    // アクセスを断られている可能性があるため、5xx・通信エラーと同じく見送る（ADR-0005）
+    if (status === 404 || status === 410) {
       log.info(`robots.txt がありません（制限なしとして扱います）: ${robotsUrl} (status=${status})`);
       return { state: "missing" };
+    }
+    if (status === null || status >= 400) {
+      log.warn(`robots.txt を取得できないため、このサイトの収集を見送ります: ${robotsUrl} (status=${status})`);
+      return { state: "unavailable" };
     }
     log.info(`robots.txt を確認しました: ${robotsUrl}`);
     return { state: "ok", robots: robotsParser(robotsUrl, body) };

@@ -37,7 +37,11 @@ export class Collector {
     return (await this.fetcher.get(url, interval)).text;
   }
 
-  async collect(target: TargetConfig): Promise<CollectResult> {
+  /**
+   * @param previousItems 同じ対象の直前の成功・一部失敗の回の商品件数（Storage.lastItemCount）。
+   *   これが 1 以上なのに今回 0 件なら、セレクタが合わなくなったなどの読み取りの失敗とみなす。
+   */
+  async collect(target: TargetConfig, previousItems = 0): Promise<CollectResult> {
     const result = emptyResult(target.name);
     if (await this.robots.isUnavailable(target.startUrl)) {
       return { ...result, status: "skipped", message: "robots.txt を取得できないため見送り" };
@@ -49,6 +53,12 @@ export class Collector {
     if (result.status === "skipped") return result;
     result.items = this.toItems(rows);
     if (Object.keys(target.detailFields).length > 0) await this.fillDetails(target, result);
+    if (result.items.length === 0 && result.errorCount === 0 && previousItems > 0) {
+      // 「成功」にすると分析部が全商品を掲載終了と判定するため、エラーとして数えて「失敗」にする（ADR-0005）
+      log.error(`商品を 1 件も読み取れません（前回 ${previousItems} 件）。item_selector・fields を確かめてください: ${target.startUrl}`);
+      result.errorCount++;
+      result.message = `商品が 0 件（前回 ${previousItems} 件）`;
+    }
     result.status = result.errorCount === 0 ? "success" : result.items.length > 0 ? "partial" : "failed";
     return result;
   }

@@ -109,7 +109,7 @@ export class Fetcher {
     throw new FetchError(url, `再試行しても取得できません（${lastReason}）`, lastStatus);
   }
 
-  /** robots.txt を取得する。4xx は status をそのまま、取得できなければ null か 5xx を返す。 */
+  /** robots.txt を取得する。4xx（再試行後の 429 を含む）は status をそのまま、取得できなければ null か 5xx を返す。 */
   fetchRobots = async (robotsUrl: string): Promise<{ status: number | null; body: string }> => {
     try {
       const res = await this.get(robotsUrl);

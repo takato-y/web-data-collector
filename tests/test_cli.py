@@ -66,3 +66,14 @@ def test_dry_run_prints_payload(tmp_path, capsys, monkeypatch):
     assert main(["notify", "-c", cfg, "--dry-run"]) == 0
     out = capsys.readouterr().out
     assert "[通知] dry_run: 8 件" in out and '"text"' in out
+
+
+def test_db_open_error_is_logged_and_returns_1(tmp_path, capsys):
+    """履歴DB を開けないときも「想定外の誤り」として analysis.log に残し、終了コード 1 を返す（TC-011-06）。"""
+    data = yaml.safe_load((ROOT / "config.example.yaml").read_text(encoding="utf-8"))
+    (tmp_path / "blocker").write_text("フォルダではなくファイル", encoding="utf-8")
+    data["storage"] = {"db_path": "blocker/history.db"}  # 親がファイルのため作れない
+    path = tmp_path / "config.yaml"
+    path.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    assert main(["analyze", "-c", str(path)]) == 1
+    assert "想定外の誤りで止まりました" in (tmp_path / "logs" / "analysis.log").read_text(encoding="utf-8")

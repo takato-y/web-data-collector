@@ -64,3 +64,18 @@ test("制約違反なら、その実行の書き込みをすべて取り消す�
 test("日時は分析部（Python）が読める形式（TC-007-05）", () => {
   assert.match(nowIso(new Date()), /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d[+-]\d\d:\d\d$/);
 });
+
+test("前回の成功・一部失敗の商品件数を返し、失敗・見送り・実行中は数えない（TC-007-06）", () => {
+  const st = tmpDb();
+  assert.equal(st.lastItemCount("shop"), 0); // 初回
+  const item = (id: string) => ({ productId: id, name: null, price: 100, stock: null, category: null, url: null });
+  st.saveResult(st.startRun("shop"), ok([item("A-1"), item("A-2"), item("A-3")]));
+  st.saveResult(st.startRun("shop"), { ...ok([item("A-1"), item("A-2")]), status: "partial", errorCount: 1 });
+  assert.equal(st.lastItemCount("shop"), 2);
+  st.saveResult(st.startRun("shop"), { ...ok([]), status: "failed", errorCount: 1 });
+  st.saveResult(st.startRun("shop"), { ...ok([]), status: "skipped" });
+  st.startRun("shop"); // 実行中のまま
+  assert.equal(st.lastItemCount("shop"), 2);
+  assert.equal(st.lastItemCount("other"), 0);
+  st.close();
+});
