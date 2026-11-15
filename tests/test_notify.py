@@ -62,6 +62,22 @@ def test_generic_has_structured_events_and_truncation(storage):
     assert "ほか 1 件は Excel レポートを参照" in payload["text"]
 
 
+def test_teams_payload_has_text_and_neutralized_mentions(storage):
+    payload = build_payload(storage.unnotified_events(), "teams", 20, NOW)
+    assert set(payload) == {"text"}
+    text = payload["text"]
+    assert text.splitlines()[0] == "[価格・在庫の変化] demo_shop 2026-11-15 09:00"
+    assert "・値下げ A-1 方眼ノート: 480円 → 398円 (-82円)" in text
+    assert "@everyone" not in text and "@​everyone" in text
+
+
+def test_mask_url_drops_credentials():
+    masked = mask_url("https://user:pass@hooks.example.com:8443/services/SECRET?token=x")
+    assert masked == "https://hooks.example.com:8443/***"
+    assert "user" not in masked and "pass" not in masked
+    assert mask_url("http://127.0.0.1:8765/hook") == "http://127.0.0.1:8765/***"
+
+
 @pytest.mark.parametrize("url", ["http://example.com/hook", "ftp://127.0.0.1/", "", None, "https://"])
 def test_rejects_unsafe_urls(url):
     with pytest.raises(WebhookUrlError):

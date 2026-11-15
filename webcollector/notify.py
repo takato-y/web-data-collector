@@ -42,9 +42,13 @@ def validate_webhook_url(url: str | None) -> str:
 
 
 def mask_url(url: str) -> str:
-    """ログに URL の秘密部分（パス・クエリ）を残さない。"""
+    """ログに URL の秘密部分（利用者名・パスワード・パス・クエリ）を残さない。ホスト名とポートだけを残す。"""
     p = urlparse(url)
-    return f"{p.scheme}://{p.netloc}/***"
+    host = p.hostname or ""
+    if ":" in host:  # IPv6 の表記
+        host = f"[{host}]"
+    port = f":{p.port}" if p.port else ""
+    return f"{p.scheme}://{host}{port}/***"
 
 
 def _line(e) -> str:

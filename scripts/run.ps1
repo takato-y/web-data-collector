@@ -1,6 +1,8 @@
 # Runs the collector (TypeScript) and then the analysis (Python) in sequence.
 # Intended to be started from Windows Task Scheduler.
-#   Usage : powershell -NoProfile -ExecutionPolicy Bypass -File scripts\run.ps1 [-Config path]
+#   Usage : powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\run.ps1 [-Config path]
+#   RemoteSigned refuses unsigned scripts downloaded from the Internet. If this folder came from a
+#   downloaded zip, review the files and run "Unblock-File" on them once (see docs/06).
 #   Exit  : 0=success / 1=partial failure / 2=config error / 3=previous run still active
 # The webhook URL must be given in the environment variable WEBHOOK_URL (never in this file).
 # This file is ASCII only on purpose (Windows PowerShell 5.1 reads non-BOM files as the ANSI code page).
