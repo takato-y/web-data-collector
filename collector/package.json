@@ -1,6 +1,6 @@
 {
   "name": "web-data-collector-collector",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Webデータ収集ツールの収集部（TypeScript）",
   "scripts": {
     "build": "tsc -p .",
